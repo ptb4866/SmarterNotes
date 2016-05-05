@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">Drawer</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_edit_note">Notes</string>
+    <string name="title_activity_scrolling">ScrollingActivity</string>
+    <string name="title_activity_main2">Main2Activity</string>
+    <string name="just_text">
+        "Material is the metaphor.\n\n"
+        "Is a long text \n\n"
+    </string>
+    <string name='email_hint'>HINT</string>
+
+
+</resources>
