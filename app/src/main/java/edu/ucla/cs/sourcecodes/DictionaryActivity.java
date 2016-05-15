@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -34,6 +35,7 @@ public class DictionaryActivity extends AppCompatActivity {
 
     LayoutInflater inflater;
 
+    private TextToSpeechHelper ttsh;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +48,7 @@ public class DictionaryActivity extends AppCompatActivity {
 
        mContentView = this.findViewById(android.R.id.content).getRootView();
 
+        ttsh = new TextToSpeechHelper(this);
 
         Log.d(TAG, "Content View Set");
 
@@ -65,8 +68,12 @@ public class DictionaryActivity extends AppCompatActivity {
         JSONObject jsonObject;
         JSONArray soundJArray, defJArray;
 
-        TextView wordName =  (TextView)mContentView.findViewById(R.id.text_id) ;
+        final TextView wordName =  (TextView)mContentView.findViewById(R.id.text_id) ;
         ListView listView = (ListView) mContentView.findViewById(R.id.list2);
+
+        final ImageView speakerImage = (ImageView)mContentView.findViewById(R.id.imageView1);
+
+
 
         Log.d(TAG, "Setting Intent Extras");
 
@@ -80,6 +87,14 @@ public class DictionaryActivity extends AppCompatActivity {
             Log.d(TAG,"Getting definition info" + definitionInfo);
             //textView.setText(word);
             wordName.setText(word);
+
+            speakerImage.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    // TODO Auto-generated method stub
+                    ttsh.speakOut(word);
+                }
+            });
+
             try {
                 jsonObject = new JSONObject(definitionInfo);
                 defJArray = jsonObject.getJSONArray("defs");

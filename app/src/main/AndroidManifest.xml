@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.androidbelieve.drawerwithswipetabs">
-    <uses-permission android:name="android.permission.INTERNET" />
 
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <uses-feature android:name="android.hardware.camera.autofocus" />
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -21,11 +26,12 @@
         <activity
             android:name="edu.ucla.cs.sourcecodes.NoteActivity"
             android:label="@string/title_activity_edit_note"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme" />
         <activity
             android:name="edu.ucla.cs.sourcecodes.DictionaryActivity"
             android:label=""
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme" />
+
 
     </application>
 
