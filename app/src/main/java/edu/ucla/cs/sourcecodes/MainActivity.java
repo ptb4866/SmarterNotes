@@ -27,6 +27,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.androidbelieve.drawerwithswipetabs.R;
@@ -86,7 +87,7 @@ public class MainActivity extends  Activity  {
         viewPager = (ViewPager) findViewById(R.id.viewpager);
 
 
-       // _path = DATA_PATH + "/ocr.jpg";
+        // _path = DATA_PATH + "/ocr.jpg";
         /**
          *Set an Apater for the View Pager
          */

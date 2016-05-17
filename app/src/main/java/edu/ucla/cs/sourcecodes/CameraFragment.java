@@ -182,10 +182,14 @@ public class CameraFragment extends Fragment  {
         public void onPictureTaken(byte[] data, Camera camera) {
 
 
-            TextView tessStatus =  (TextView) getActivity().findViewById(R.id.tess_status);
+            TextView tessStatus =  (TextView)getActivity().findViewById(R.id.tess_status);
+
+
 
             tessStatus.setVisibility(View.VISIBLE);
             tessStatus.setText("Please Wait \n Reading data  ...");
+
+
 
             File pictureFile = getOutputMediaFile();
 
@@ -313,6 +317,7 @@ public class CameraFragment extends Fragment  {
             // Cycle done.
             tessStatus.setText("Done");
             tessStatus.setVisibility(View.GONE);
+
 
             /*
             if (pictureFile == null) {

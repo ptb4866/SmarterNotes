@@ -3,8 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="#ff6600">
-    <RelativeLayout
+    android:background="@android:color/transparent">
+    <!--RelativeLayout
         android:id="@+id/header"
         android:layout_width="fill_parent" android:layout_height="wrap_content">
         <TextView
@@ -28,6 +28,6 @@
         android:layout_below="@+id/header"
         android:background="#ff0066">
 
-    </RelativeLayout>
+    </RelativeLayout-->
 
 </RelativeLayout>
