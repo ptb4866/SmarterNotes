@@ -17,8 +17,6 @@ package edu.ucla.cs.sourcecodes;
 
 
 
-import android.app.ActionBar;
-import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
@@ -28,34 +26,21 @@ import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.hardware.Camera;
 import android.hardware.Camera.CameraInfo;
-import android.hardware.Camera.Size;
 import android.media.ExifInterface;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.annotation.Nullable;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.SurfaceHolder;
-import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import android.content.res.AssetManager;
-import java.io.RandomAccessFile;
-
-import com.androidbelieve.drawerwithswipetabs.R;
+//import com.androidbelieve.sourcecodes.R;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -63,12 +48,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.nio.BufferUnderflowException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
-
-import static android.content.Intent.getIntent;
 
 import com.googlecode.tesseract.android.TessBaseAPI;
 

@@ -1,23 +1,18 @@
 package edu.ucla.cs.sourcecodes;
 
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.hardware.Camera;
-import android.util.AttributeSet;
 import android.util.FloatMath;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
-import android.widget.ZoomControls;
 
-import com.androidbelieve.drawerwithswipetabs.R;
+//import com.androidbelieve.sourcecodes.R;
 
 import java.io.IOException;
 import java.util.List;
@@ -373,7 +368,13 @@ public class Preview extends ViewGroup implements SurfaceHolder.Callback {
         // ...
         float x = event.getX(0) - event.getX(1);
         float y = event.getY(0) - event.getY(1);
-        return FloatMath.sqrt(x * x + y * y);
+
+
+        //return FloatMath.sqrt(x * x + y * y);
+        return (float) Math.sqrt(x * x + y * y);
+
+
+
     }
 
 }

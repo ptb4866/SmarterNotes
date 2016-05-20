@@ -1,0 +1,88 @@
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:shrinkColumns="*"
+    android:stretchColumns="*"
+    android:background="#ffffff"
+     >
+
+
+    <TableRow
+        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:gravity="center_horizontal">
+        <TextView
+
+            android:layout_weight="1"
+            android:background="#ffa500"
+            android:id="@+id/text_id"
+            android:padding="20dip" android:gravity="center"
+            android:text=""/>
+        <ImageView
+            android:id="@+id/speech"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:padding="20dip" android:gravity="center"
+            android:src="@drawable/speaker1"/>
+
+    </TableRow>
+    <!--TableRow
+        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:gravity="center_horizontal">
+        <TextView
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:textSize="18dp" android:text="Row 1"  android:layout_span="3"
+            android:padding="18dip" android:background="#b0b0b0"
+            android:textColor="#000"/>
+    </TableRow-->
+
+
+     <FrameLayout
+        android:orientation="vertical"
+        android:background="@android:color/white"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/fragmentView"
+        android:layout_weight="1">
+
+        <fragment
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:id="@+id/text_fragment"
+            android:name="edu.ucla.cs.sourcecodes.DictionaryFragment"
+            android:layout_width="match_parent"
+            android:layout_height="248dp"
+            tools:layout="@layout/fragment_dictionary" />
+
+
+
+    </FrameLayout>
+    <!-- Row 1 with single column -->
+    <TableRow
+        android:id="@+id/bottom"
+        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:gravity="center_horizontal|bottom"
+        android:layout_weight="1"  >
+
+        <Button
+            android:id="@+id/translateID"
+            android:layout_weight="1"
+            android:background="#EE00FF"
+            android:textColor="#000000"
+            android:padding="20dip"
+            android:gravity="center"
+            android:text="@string/translate"/>
+
+
+        <Button
+            android:id="@+id/browseID"
+            android:layout_weight="1" android:background="#a09f9f"
+            android:textColor="#000000"
+            android:padding="20dip" android:gravity="center"
+            android:text="@string/browse"/>
+    </TableRow>
+
+</TableLayout>
