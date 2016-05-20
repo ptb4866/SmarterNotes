@@ -1,7 +1,9 @@
 package edu.ucla.cs.sourcecodes;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
+import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -18,6 +20,7 @@ import android.widget.ListView;
 //import com.androidbelieve.sourcecodes.R;
 
 
+import java.net.InetAddress;
 import java.util.ArrayList;
 
 public class NoteActivity extends AppCompatActivity {
@@ -123,8 +126,27 @@ public class NoteActivity extends AppCompatActivity {
             }
         });
 
+    }
 
+    private boolean isNetworkConnected() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 
+        return cm.getActiveNetworkInfo() != null;
+    }
+
+    public boolean isInternetAvailable() {
+        try {
+            InetAddress ipAddr = InetAddress.getByName("google.com"); //You can replace it with your name
+
+            if (ipAddr.equals("")) {
+                return false;
+            } else {
+                return true;
+            }
+
+        } catch (Exception e) {
+            return false;
+        }
 
     }
 

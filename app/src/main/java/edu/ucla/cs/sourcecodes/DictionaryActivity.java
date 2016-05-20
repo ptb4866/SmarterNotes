@@ -200,9 +200,10 @@ public class DictionaryActivity extends AppCompatActivity implements AdapterView
 
         ArrayList<String> defCopy = new ArrayList<>();
 
-        if (!definitions.isEmpty()) {
+        if ( definitions != null) {
 
 
+            Boolean check = false;
             if (!to.equals(Language.ENGLISH.toString())) {
                 for (String def: definitions) {
 
@@ -217,14 +218,23 @@ public class DictionaryActivity extends AppCompatActivity implements AdapterView
 
 
                 values = defCopy.toArray(new String[defCopy.size()]);
+                check = true;
 
             } else {
                 values = definitions.toArray(new String[definitions.size()]);
+
+                check = true;
             }
-            Log.d(TAG,"Creating ListView adapter");
-            ArrayAdapter<String> adapter  = new ArrayAdapter<String>(getApplicationContext(), R.layout.listview_layout2, android.R.id.text1, values);
-            Log.d(TAG,"Setting Adapter");
-            listView.setAdapter(adapter);
+
+
+            if (check == true ) {
+                Log.d(TAG, "Creating ListView adapter");
+                ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.listview_layout2, android.R.id.text1, values);
+
+                Log.d(TAG, "Setting Adapter");
+                listView.setAdapter(adapter);
+
+            }
 
         }
 
