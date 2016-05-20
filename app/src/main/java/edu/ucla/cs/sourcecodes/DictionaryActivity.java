@@ -9,9 +9,11 @@ import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import org.json.JSONArray;
@@ -20,13 +22,13 @@ import org.json.JSONException;
 
 import android.view.LayoutInflater;
 import android.widget.ArrayAdapter;
-
+import android.widget.Toast;
 
 
 import java.util.ArrayList;
 
 
-public class DictionaryActivity extends AppCompatActivity {
+public class DictionaryActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
 
 
@@ -39,10 +41,12 @@ public class DictionaryActivity extends AppCompatActivity {
     private View mContentView = null;
 
     LayoutInflater inflater;
-
+    String soundOfWord;
     private TextToSpeechHelper ttsh;
+    ListView listView;
 
-    
+    ArrayList<String> definitions;
+    TextView wordName = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +62,7 @@ public class DictionaryActivity extends AppCompatActivity {
             StrictMode.setThreadPolicy(policy);
         }
 
-    //    mContentView = this.findViewById(android.R.id.content).getRootView();
+        //    mContentView = this.findViewById(android.R.id.content).getRootView();
 
         ttsh = new TextToSpeechHelper(this);
 
@@ -80,10 +84,10 @@ public class DictionaryActivity extends AppCompatActivity {
         JSONObject jsonObject;
         JSONArray soundJArray, defJArray;
 
-        final TextView wordName =  (TextView)findViewById(R.id.text_id) ;
-        ListView listView = (ListView) findViewById(R.id.list2);
+        wordName =  (TextView)findViewById(R.id.text_id) ;
+        listView = (ListView) findViewById(R.id.list2);
 
-        final ImageView speakerImage = (ImageView) findViewById(R.id.speech);
+        final Button speakerImage = (Button) findViewById(R.id.speech);
 
 
 
@@ -100,6 +104,7 @@ public class DictionaryActivity extends AppCompatActivity {
             //textView.setText(word);
             wordName.setText(word);
 
+
             speakerImage.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     // TODO Auto-generated method stub
@@ -112,18 +117,20 @@ public class DictionaryActivity extends AppCompatActivity {
                 defJArray = jsonObject.getJSONArray("defs");
                 soundJArray = jsonObject.getJSONArray("sounds");
 
-                String soundOfWord = soundJArray.getString(0);
-                ArrayList<String> definitions = new ArrayList<>();
+                soundOfWord = soundJArray.getString(0);
+                definitions = new ArrayList<>();
 
                 for (int i = 0; i < defJArray.length(); i++) {
 
                     Log.d(TAG, "Adding to definition list");
 
-                    //definitions = Integer.toString(i) + " " + defJArray.getString(i) + "\n";
-                    definitions.add(Integer.toString(i + 1) + " " + defJArray.getString(i));
+                    if (!defJArray.getString(i).isEmpty()) {
 
+                        definitions.add(defJArray.getString(i));
+                        //definitions.add(Integer.toString(i + 1) + " " + defJArray.getString(i));
+                        //  defCopy.add(defJArray.getString(i));
 
-
+                    }
                 }
 
                 values = definitions.toArray(new String[definitions.size()]);
@@ -147,19 +154,155 @@ public class DictionaryActivity extends AppCompatActivity {
 
         }
 
-        final Button translateID =  (Button)findViewById(R.id.translateID) ;
+        // final Button translateID =  (Button)findViewById(R.id.translateID) ;
         final Button browseID =  (Button)findViewById(R.id.browseID) ;
 
-        translateID.setOnClickListener(onClickListener);
+        //translateID.setOnClickListener(onClickListener);
         browseID.setOnClickListener(onClickListener);
 
+
+
+        //Spinner listiener
+        Spinner spinner = (Spinner) findViewById(R.id.spinner);
+        // Create an ArrayAdapter using the string array and a default spinner layout
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.languages, android.R.layout.simple_spinner_item);
+        // Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Apply the adapter to the spinner
+        spinner.setAdapter(adapter);
+
+        spinner.setOnItemSelectedListener(this);
+
+
     }
+
+
+    public void setTranslation(String to) {
+
+        String data;
+        String[] values;
+        try {
+
+            if (!to.equals(Language.ENGLISH.toString())) {
+
+                data = word;
+                data = Translate.translate(data, Language.ENGLISH.toString(), to);
+                wordName.setText(data);
+
+            } else {
+                wordName.setText(word);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+        ArrayList<String> defCopy = new ArrayList<>();
+
+        if (!definitions.isEmpty()) {
+
+
+            if (!to.equals(Language.ENGLISH.toString())) {
+                for (String def: definitions) {
+
+                    try {
+                        data = Translate.translate(def, Language.ENGLISH.toString(), to);
+                        defCopy.add(data);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
+
+                values = defCopy.toArray(new String[defCopy.size()]);
+
+            } else {
+                values = definitions.toArray(new String[definitions.size()]);
+            }
+            Log.d(TAG,"Creating ListView adapter");
+            ArrayAdapter<String> adapter  = new ArrayAdapter<String>(getApplicationContext(), R.layout.listview_layout2, android.R.id.text1, values);
+            Log.d(TAG,"Setting Adapter");
+            listView.setAdapter(adapter);
+
+        }
+
+
+
+
+
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view,
+                               int pos, long id) {
+        // An item was selected. You can retrieve the selected item using
+        String item =  parent.getItemAtPosition(pos).toString();
+
+        switch (item) {
+
+            case "English":
+
+                Toast.makeText(parent.getContext(), "Translating to: " + item, Toast.LENGTH_LONG).show();
+
+                setTranslation(Language.ENGLISH.toString());
+
+                break;
+            case "French":
+
+                Toast.makeText(parent.getContext(), "Translating to: " + item, Toast.LENGTH_LONG).show();
+
+
+               /* try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }*/
+                setTranslation(Language.FRENCH.toString());
+
+                break;
+            case "Spanish":
+
+                Toast.makeText(parent.getContext(), "Translating to: " + item, Toast.LENGTH_LONG).show();
+                /*try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }*/
+
+                setTranslation(Language.SPANISH.toString());
+                break;
+
+            case "Russian":
+                Toast.makeText(parent.getContext(), "Translating to: " + item, Toast.LENGTH_LONG).show();
+                /*try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }*/
+
+                setTranslation(Language.RUSSIAN.toString());
+                break;
+            default: Log.d(TAG, "No language Found:");
+                break;
+
+
+        }
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+        // Another interface callback
+    }
+
+
 
     private View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
         public void onClick(final View v) {
             switch(v.getId()){
-                case R.id.translateID:
+          /*      case R.id.translateID:
                     //DO something
                          try {
 
@@ -179,7 +322,8 @@ public class DictionaryActivity extends AppCompatActivity {
                         }
 
 
-                    break;
+                    break;*/
+
                 case R.id.browseID:
                     //DO something
                     if (!word.equals(null)) {
