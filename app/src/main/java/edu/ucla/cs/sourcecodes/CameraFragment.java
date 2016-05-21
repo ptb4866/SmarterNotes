@@ -17,7 +17,10 @@ package edu.ucla.cs.sourcecodes;
 
 
 
+import android.app.Activity;
+import android.app.Dialog;
 import android.app.Fragment;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetManager;
@@ -54,9 +57,11 @@ import java.util.Date;
 import com.googlecode.tesseract.android.TessBaseAPI;
 
 
+
+
 public class CameraFragment extends Fragment  {
 
-
+    public static ProgressDialog progressDialog = null;
 
     protected static final String PHOTO_TAKEN = "photo_taken";
     // You should have the trained data file in assets folder
@@ -123,8 +128,13 @@ public class CameraFragment extends Fragment  {
         if (mCamera != null) {
             Log.d(TAG,"onInitiateCapture, mCamera not null");
             if(Preview.safeToTakePicture) {
+
+                someEventListener.someEvent("displayCameraMessage");
+
                 Log.d(TAG,"onInitiateCapture - Save to take pic");
                 mCamera.takePicture(null, null, mPicture);
+
+
                 Preview.safeToTakePicture = false;
 
             }
@@ -155,12 +165,27 @@ public class CameraFragment extends Fragment  {
         outState.putBoolean(PHOTO_TAKEN, Preview.safeToTakePicture);
     }
 
+    public interface onMyEventListener {
+        public void someEvent(String s);
+    }
 
+    onMyEventListener someEventListener;
 
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try {
+            someEventListener = (onMyEventListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString() + " must implement onMyEventListener");
+        }
+    }
 
     Camera.PictureCallback mPicture = new Camera.PictureCallback() {
         @Override
         public void onPictureTaken(byte[] data, Camera camera) {
+
+
 
 
             TextView tessStatus =  (TextView)getActivity().findViewById(R.id.tess_status);
@@ -170,6 +195,11 @@ public class CameraFragment extends Fragment  {
             tessStatus.setVisibility(View.VISIBLE);
             tessStatus.setText("Please Wait \n Reading data  ...");
 
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
 
 
             File pictureFile = getOutputMediaFile();
@@ -298,6 +328,16 @@ public class CameraFragment extends Fragment  {
             // Cycle done.
             tessStatus.setText("Done");
             tessStatus.setVisibility(View.GONE);
+
+            someEventListener.someEvent("dismissProgressBar");
+            //pass
+            Intent i = new Intent(getActivity().getBaseContext(), NoteActivity.class);
+            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            i.setAction(Intent.ACTION_VIEW);
+            i.putExtra("cameraActivityString",recognizedText);
+            Log.d(TAG, "starting Other Activity");
+            getActivity().getBaseContext().startActivity(i);
+
 
 
             /*

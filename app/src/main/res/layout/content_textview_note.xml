@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -10,10 +10,82 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="edu.ucla.cs.sourcecodes.NoteActivity"
-    tools:showIn="@layout/activity_textview_note">
+    tools:showIn="@layout/activity_textview_note"
+    >
 
 
-    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+             xmlns:chip="http://schemas.android.com/apk/res-auto">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    >
+
+
+                        <!--co.hkm.soltag.TagContainerLayout
+                            android:id="@+id/tagcontainerLayout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="10dp"
+                            android:padding="5dip"
+                            app:container_enable_drag="true"
+                            app:horizontal_interval="10dp"
+                            app:tag_clickable="true"
+                            app:tag_theme="pure_teal"
+                            app:vertical_interval="10dp"
+                            android:focusable="false"
+                            android:focusableInTouchMode="false"/-->
+
+                        <co.hkm.soltag.TagContainerLayout
+                            android:id="@+id/tagcontainerLayout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            chip:chip_background="@color/deep_orange"
+                            chip:chip_background_selected="@color/blue_grey"
+                            chip:chip_corner_radius="6dp"
+                            chip:chip_line_spacing="20dp"
+                            chip:chip_padding="10dp"
+                            chip:chip_side_padding="10dp"
+                            chip:chip_spacing="16dp" />
+
+
+
+                        <edu.ucla.cs.utils.ChipView
+                            android:id="@+id/chipview"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
+
+                        <edu.ucla.cs.utils.ChipView
+                            android:id="@+id/text_chip_attrs"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            chip:chip_background="@color/deep_orange"
+                            chip:chip_background_selected="@color/blue_grey"
+                            chip:chip_corner_radius="6dp"
+                            chip:chip_line_spacing="20dp"
+                            chip:chip_padding="10dp"
+                            chip:chip_side_padding="10dp"
+                            chip:chip_spacing="16dp" />
+
+
+
+                </LinearLayout>
+        </ScrollView>
+
+
+
+
+
+
+
+
+
+
+<!--ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:fillViewport="true">
@@ -23,22 +95,25 @@
       android:layout_width="match_parent"
       android:layout_height="match_parent"/>
 
-    </ScrollView>
+    </ScrollView-->
 
 
-  <!--ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:fillViewport="true">
 
-      <TextView
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:id="@+id/editText_id"
-          android:layout_alignParentTop="true"
-          android:layout_centerHorizontal="true"
-          android:layout_marginTop="146dp" />
+        <!--ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true">
 
-  </ScrollView-->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/editText_id"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="146dp" />
 
-</RelativeLayout>
+        </ScrollView-->
+
+
+
+</LinearLayout>

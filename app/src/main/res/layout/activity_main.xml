@@ -73,5 +73,20 @@
         >
     </android.support.design.widget.TabLayout>
 
+    <!--TableRow
+        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:gravity="center_horizontal|bottom"
+        android:layout_weight="1"  >
+
+        <TextView
+            android:id="@+id/tess_status"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:textSize="18dp" android:text="Row 1"  android:layout_span="3"
+            android:padding="18dip" android:background="#b0b0b0"
+            android:textColor="@color/deep_orange"
+            android:visibility="visible"/>
+    </TableRow-->
+
 
 </RelativeLayout>

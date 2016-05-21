@@ -9,10 +9,17 @@
         <dex dex="/home/ptb4866/AndroidStudioProjects/SmarterNotes/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-appcompat-v7-23.3.0_f1597bb75790d1f593c53c41e27bcad587f24163/classes.dex" />
     </item>
     <item
+        jar="/home/ptb4866/AndroidStudioProjects/SmarterNotes/app/build/intermediates/exploded-aar/com.hkm.taglib/tag/1.2.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.3"
+        sha1="8adc7c4cefbdd9c364f945f1b691ba6874376ebb">
+        <dex dex="/home/ptb4866/AndroidStudioProjects/SmarterNotes/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.hkm.taglib-tag-1.2.0_169e94146dad40d1a9c01d2e5a8613c56087206a/classes.dex" />
+    </item>
+    <item
         jar="/home/ptb4866/AndroidStudioProjects/SmarterNotes/app/build/intermediates/incremental-classes/debug/instant-run-bootstrap.jar"
         jumboMode="true"
         revision="23.0.3"
-        sha1="55781461c3f8cf85177759ac0a87138e4167388a">
+        sha1="f4c8bbaaeb281d3cb9262d078f891023e14b8662">
         <dex dex="/home/ptb4866/AndroidStudioProjects/SmarterNotes/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run-bootstrap_3e51cbbea1e9038e0f4f356a41d52f226888b4eb/classes.dex" />
     </item>
     <item
@@ -61,7 +68,7 @@
         jar="/home/ptb4866/AndroidStudioProjects/SmarterNotes/app/build/intermediates/incremental-runtime-classes/debug/instant-run.jar"
         jumboMode="true"
         revision="23.0.3"
-        sha1="ba06b46f4992f72c03825e336f1f9c6a86ee8e39">
+        sha1="d28255758ea60625eff7c8badd0e6b405c60516e">
         <dex dex="/home/ptb4866/AndroidStudioProjects/SmarterNotes/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run_210e6e55d6f7253ecbd494bfd9cd61c60bb9160a/classes.dex" />
     </item>
     <item

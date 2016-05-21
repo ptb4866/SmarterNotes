@@ -1,6 +1,9 @@
 package edu.ucla.cs.sourcecodes;
 
 import android.app.Activity;
+import android.app.Dialog;
+import android.app.Fragment;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -16,12 +19,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 //import com.androidbelieve.sourcecodes.R;
 
 import java.io.File;
 
-public class MainActivity extends  Activity  {
+public class MainActivity extends  Activity implements CameraFragment.onMyEventListener {
     DrawerLayout mDrawerLayout;
     NavigationView mBottomView;
     android.app.FragmentManager mFragmentManager;
@@ -36,10 +40,12 @@ public class MainActivity extends  Activity  {
             R.drawable.composea,
     };
 
+    public final int CAMERA_MESSAGE = 0;
     public static TabLayout tabLayout;
     public static ViewPager viewPager;
     public static int int_items = 3 ;
     private MyAdapter adapter;
+    public static ProgressDialog progressBar =  null;
 
     public static String _path;
 
@@ -53,7 +59,7 @@ public class MainActivity extends  Activity  {
 
         return args;
     }
-
+    Intent getResults = getIntent();
     @Nullable
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +72,9 @@ public class MainActivity extends  Activity  {
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         viewPager = (ViewPager) findViewById(R.id.viewpager);
 
+
+
+        Log.d(TAG, "MyRESULT");
 
         // _path = DATA_PATH + "/ocr.jpg";
         /**
@@ -192,6 +201,45 @@ public class MainActivity extends  Activity  {
             }
         });
        // return mContentView;
+
+    }
+
+    @Override
+    protected Dialog onCreateDialog(int id) {
+
+        switch (id) {
+            case CAMERA_MESSAGE:   //set to 0
+
+                progressBar = new ProgressDialog(this);
+                progressBar.setMessage("Finding Definiation ... ");
+                progressBar.setIndeterminate(false);
+                progressBar.setMax(100);
+                progressBar.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+                progressBar.setCancelable(true);
+                progressBar.show();
+                return progressBar;
+        }
+
+        return null;
+    }
+
+
+    @Override
+    public void someEvent(String s) {
+
+        if ("displayCameraMessage".equals(s)) {
+
+            progressBar = ProgressDialog.show(this,"Camera Message", "Please Wait. Extracting Text");
+
+        }
+
+        if ("dismissProgressBar".equals(s)) {
+
+            if (progressBar != null && progressBar.isShowing()) {
+
+                progressBar.dismiss();
+            }
+        }
 
     }
 

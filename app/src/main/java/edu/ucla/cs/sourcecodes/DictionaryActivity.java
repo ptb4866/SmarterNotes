@@ -47,7 +47,7 @@ public class DictionaryActivity extends AppCompatActivity implements AdapterView
 
     ArrayList<String> definitions;
     TextView wordName = null;
-
+    Button speakerImage;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,7 +87,7 @@ public class DictionaryActivity extends AppCompatActivity implements AdapterView
         wordName =  (TextView)findViewById(R.id.text_id) ;
         listView = (ListView) findViewById(R.id.list2);
 
-        final Button speakerImage = (Button) findViewById(R.id.speech);
+        speakerImage = (Button) findViewById(R.id.speech);
 
 
 
@@ -180,7 +180,8 @@ public class DictionaryActivity extends AppCompatActivity implements AdapterView
 
     public void setTranslation(String to) {
 
-        String data;
+        String data = null;
+
         String[] values;
         try {
 
@@ -191,11 +192,21 @@ public class DictionaryActivity extends AppCompatActivity implements AdapterView
                 wordName.setText(data);
 
             } else {
+                data = word;
                 wordName.setText(word);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+
+        final String finalData = data;
+        speakerImage.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                ttsh.speakOut(finalData);
+            }
+        });
 
 
         ArrayList<String> defCopy = new ArrayList<>();

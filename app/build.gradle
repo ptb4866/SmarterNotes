@@ -27,5 +27,7 @@ dependencies {
     compile 'com.android.support:support-v4:23.3.0'
 
     compile project(path: ':libraries:tess-two')
+
+    compile 'com.hkm.taglib:tag:1.2.0'
 }
 
