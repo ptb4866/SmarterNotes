@@ -1,17 +1,23 @@
 package edu.ucla.cs.sourcecodes;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.app.Fragment;
+
+import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
+
 import android.os.Bundle;
-import android.provider.MediaStore;
+
+import android.speech.RecognitionListener;
+import android.speech.RecognizerIntent;
+import android.speech.SpeechRecognizer;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -21,9 +27,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-//import com.androidbelieve.sourcecodes.R;
+import java.util.ArrayList;
+import java.util.Locale;
 
-import java.io.File;
 
 public class MainActivity extends  Activity implements CameraFragment.onMyEventListener {
     DrawerLayout mDrawerLayout;
@@ -47,19 +53,11 @@ public class MainActivity extends  Activity implements CameraFragment.onMyEventL
     private MyAdapter adapter;
     public static ProgressDialog progressBar =  null;
 
-    public static String _path;
+    public static SpeechRecognizer mSpeechRecognizer;
+    private Intent mSpeechRecognizerIntent;
+    private boolean mIslistening;
+    TextView notifications;
 
-/*    public static final String DATA_PATH = Environment
-            .getExternalStorageDirectory().toString() + "/SimpleAndroidOCR/";*/
-    public Bundle getBundle() {
-
-
-        Bundle args = new Bundle();
-        args.putString("message", "takeAPicture");
-
-        return args;
-    }
-    Intent getResults = getIntent();
     @Nullable
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,11 +70,27 @@ public class MainActivity extends  Activity implements CameraFragment.onMyEventL
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         viewPager = (ViewPager) findViewById(R.id.viewpager);
 
+       notifications = (TextView)findViewById(R.id.status);
 
 
-        Log.d(TAG, "MyRESULT");
+        mIslistening = false;
 
-        // _path = DATA_PATH + "/ocr.jpg";
+        mSpeechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
+        mSpeechRecognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        mSpeechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        mSpeechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE,
+                this.getPackageName());
+
+        mSpeechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS,1);
+        mSpeechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.ENGLISH);
+
+
+        SpeechRecognitionListener listener = new SpeechRecognitionListener();
+        mSpeechRecognizer.setRecognitionListener(listener);
+
+
+
         /**
          *Set an Apater for the View Pager
          */
@@ -99,12 +113,7 @@ public class MainActivity extends  Activity implements CameraFragment.onMyEventL
                 tabLayout.getTabAt(1).setIcon(ICONS[1]);
                 tabLayout.getTabAt(2).setIcon(ICONS[2]);
 
-
-                //tabLayout.setOnTabSelectedListener(
-                //        new TabLayout.ViewPagerOnTabSelectedListener(viewPager) {
-
-
-                tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+                 tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
                     @Override
                     public void onTabSelected(TabLayout.Tab tab) {
                         // super.onTabSelected(tab);
@@ -114,31 +123,85 @@ public class MainActivity extends  Activity implements CameraFragment.onMyEventL
                         switch(tabPosition) {
                             case 0:
                                 Log.d(TAG, "Position 0 selected");
+
+
+                                if (CameraFragment.progressDialog == null) {
+
+                                    if (!mIslistening) {
+                                        mSpeechRecognizer.startListening(mSpeechRecognizerIntent);
+                                    }
+
+                                }
+
+                                if (CameraFragment.progressDialog != null) {
+
+                                    if (!CameraFragment.progressDialog.isShowing()) {
+                                        if (!mIslistening) {
+                                            mSpeechRecognizer.startListening(mSpeechRecognizerIntent);
+                                        }
+
+                                    }
+                                }
+
+
+
+
                                 break;
                             case 1:
 
 
-                                final CameraFragment fragment = (CameraFragment)getFragmentManager().findFragmentById(R.id.camera_frag);
-                                fragment.onInitiateCapture();
+                                if (mSpeechRecognizer != null) {
+
+                                    mSpeechRecognizer.cancel();
+                                    findViewById(R.id.status).setVisibility(View.GONE);
+
+                                }
+                                if (CameraFragment.progressDialog == null) {
+
+                                    final CameraFragment fragment = (CameraFragment) getFragmentManager().findFragmentById(R.id.camera_frag);
+                                    fragment.onInitiateCapture();
+
+                                }
+
+                                if (CameraFragment.progressDialog != null) {
+
+                                    if (!CameraFragment.progressDialog.isShowing()) {
+                                        final CameraFragment fragment = (CameraFragment) getFragmentManager().findFragmentById(R.id.camera_frag);
+                                        fragment.onInitiateCapture();
 
 
+                                    }
 
-                              //  android.app.FragmentTransaction ft = getFragmentManager().beginTransaction();
-                              //  ft.add(new CameraFragment(), null);
-                              //  ft.commit();
-
-                           /*     mFragmentManager = getFragmentManager();
-                                mFragmentTransaction = mFragmentManager.beginTransaction();
-                                mFragmentTransaction.replace(R.id.camera_frag,new CameraFragment()).commit();*/
-                                break;
+                                }
+                                            break;
                             case 2:
-                                Log.d(TAG, "Position 2 selected");
 
-                                Intent i = new Intent(getApplicationContext(), NoteActivity.class);
-                                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                i.setAction(Intent.ACTION_VIEW);
-                                startActivity(i);
-                                break;
+                                if (mSpeechRecognizer != null) {
+
+                                    mSpeechRecognizer.cancel();
+                                    findViewById(R.id.status).setVisibility(View.GONE);
+
+                                }
+                                Log.d(TAG, "Position 2 selected");
+                                if (CameraFragment.progressDialog == null) {
+
+                                    Intent i = new Intent(getApplicationContext(), NoteActivity.class);
+                                    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    i.setAction(Intent.ACTION_VIEW);
+                                    startActivity(i);
+
+                                }
+                                if (CameraFragment.progressDialog != null) {
+
+                                    if (!CameraFragment.progressDialog.isShowing()) {
+                                        Intent i = new Intent(getApplicationContext(), NoteActivity.class);
+                                        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                        i.setAction(Intent.ACTION_VIEW);
+                                        startActivity(i);
+
+                                    }
+                                }
+                                        break;
                         }
 
                         Log.d(TAG,"Tab Selected!!");
@@ -161,33 +224,83 @@ public class MainActivity extends  Activity implements CameraFragment.onMyEventL
                         switch(tabPosition) {
                             case 0:
                                 Log.d(TAG, "Position 0 selected");
+                                if (CameraFragment.progressDialog == null) {
+
+                                    if (!mIslistening) {
+                                        mSpeechRecognizer.startListening(mSpeechRecognizerIntent);
+                                    }
+
+                                }
+                                if (CameraFragment.progressDialog != null) {
+
+                                    if (!CameraFragment.progressDialog.isShowing()) {
+                                        if (!mIslistening) {
+                                            mSpeechRecognizer.startListening(mSpeechRecognizerIntent);
+                                        }
+
+                                    }
+                                }
+
+
                                 break;
                             case 1:
 
+                                if (mSpeechRecognizer != null) {
 
-                                final CameraFragment fragment = (CameraFragment)getFragmentManager().findFragmentById(R.id.camera_frag);
-                                fragment.onInitiateCapture();
+                                    mSpeechRecognizer.cancel();
+                                    findViewById(R.id.status).setVisibility(View.GONE);
+
+                                }
+                                if (CameraFragment.progressDialog == null) {
+
+                                    final CameraFragment fragment = (CameraFragment) getFragmentManager().findFragmentById(R.id.camera_frag);
+                                    fragment.onInitiateCapture();
+
+                                }
+                                if (CameraFragment.progressDialog != null) {
+
+                                    if (!CameraFragment.progressDialog.isShowing()) {
+                                        final CameraFragment fragment = (CameraFragment) getFragmentManager().findFragmentById(R.id.camera_frag);
+                                        fragment.onInitiateCapture();
 
 
+                                    }
 
-                                //   startCameraActivity();
+                                }
 
-
-                                //  android.app.FragmentTransaction ft = getFragmentManager().beginTransaction();
-                                //  ft.add(new CameraFragment(), null);
-                                //  ft.commit();
-
-                           /*     mFragmentManager = getFragmentManager();
-                                mFragmentTransaction = mFragmentManager.beginTransaction();
-                                mFragmentTransaction.replace(R.id.camera_frag,new CameraFragment()).commit();*/
                                 break;
                             case 2:
                                 Log.d(TAG, "Position 2 selected");
 
-                                Intent i = new Intent(getApplicationContext(), NoteActivity.class);
-                                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                i.setAction(Intent.ACTION_VIEW);
-                                startActivity(i);
+                                if (mSpeechRecognizer != null) {
+
+                                    mSpeechRecognizer.cancel();
+                                    findViewById(R.id.status).setVisibility(View.GONE);
+
+                                }
+                                Log.d(TAG, "Position 2 selected");
+                                if (CameraFragment.progressDialog == null) {
+
+                                    Intent i = new Intent(getApplicationContext(), NoteActivity.class);
+                                    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    i.setAction(Intent.ACTION_VIEW);
+                                    startActivity(i);
+
+                                }
+                                if (CameraFragment.progressDialog != null) {
+
+                                    if (!CameraFragment.progressDialog.isShowing()) {
+                                        Intent i = new Intent(getApplicationContext(), NoteActivity.class);
+                                        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                        i.setAction(Intent.ACTION_VIEW);
+                                        startActivity(i);
+
+                                    }
+                                }
+                               // Intent i = new Intent(getApplicationContext(), NoteActivity.class);
+                               // i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                               // i.setAction(Intent.ACTION_VIEW);
+                               // startActivity(i);
                                 break;
                         }
 
@@ -204,57 +317,141 @@ public class MainActivity extends  Activity implements CameraFragment.onMyEventL
 
     }
 
+
+
     @Override
-    protected Dialog onCreateDialog(int id) {
+    public void  onDestroy() {
+        super.onDestroy();
+        mSpeechRecognizer.destroy();
 
-        switch (id) {
-            case CAMERA_MESSAGE:   //set to 0
-
-                progressBar = new ProgressDialog(this);
-                progressBar.setMessage("Finding Definiation ... ");
-                progressBar.setIndeterminate(false);
-                progressBar.setMax(100);
-                progressBar.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-                progressBar.setCancelable(true);
-                progressBar.show();
-                return progressBar;
-        }
-
-        return null;
     }
 
+    protected class SpeechRecognitionListener implements RecognitionListener
+    {
+
+        @Override
+        public void onBeginningOfSpeech()
+        {
+            //Log.d(TAG, "onBeginingOfSpeech");
+
+            notifications.setVisibility(View.VISIBLE);
+            //notifications.setText("Please Wait!!!");
+        }
+
+        @Override
+        public void onBufferReceived(byte[] buffer)
+        {
+
+        }
+
+        @Override
+        public void onEndOfSpeech()
+        {
+            Log.d(TAG, "onEndOfSpeech");
+            notifications.setText("Got it!!!");
+
+            notifications.setVisibility(View.GONE);
+        }
+
+        @Override
+        public void onError(int error)
+        {
+            mSpeechRecognizer.startListening(mSpeechRecognizerIntent);
+
+            notifications.setText("Didn't hear that. Select Audio Button!!!");
+
+            Log.d(TAG, "error = " + error);
+        }
+
+        @Override
+        public void onEvent(int eventType, Bundle params)
+        {
+
+        }
+
+        @Override
+        public void onPartialResults(Bundle partialResults)
+        {
+
+        }
+
+        @Override
+        public void onReadyForSpeech(Bundle params)
+        {
+            Log.d(TAG, "onReadyForSpeech"); //$NON-NLS-1$
+            notifications.setText("Say Something!!!");
+        }
+
+        @Override
+        public void onResults(Bundle results)
+        {
+            //Log.d(TAG, "onResults"); //$NON-NLS-1$
+            ArrayList<String> matches = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+            // matches are the return values of speech recognition engine
+            // Use these values for whatever you wish to do
+
+            String str = "";
+
+            for (String match: matches) {
+
+                str = str  + match + " ";
+            }
+
+            notifications.setText("You said " + str);
+
+            Intent i = new Intent( getApplicationContext(), NoteActivity.class);
+            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            i.setAction(Intent.ACTION_VIEW);
+            i.putExtra("cameraActivityString", str);
+            Log.d(TAG, "starting Other Activity");
+            startActivity(i);
+
+        }
+
+        @Override
+        public void onRmsChanged(float rmsdB)
+        {
+        }
+    }
+
+
+    void addShowHideListener(final Fragment fragment) {
+
+            FragmentTransaction ft = getFragmentManager().beginTransaction();
+            ft.setCustomAnimations(android.R.animator.fade_in,
+                    android.R.animator.fade_out);
+            if (fragment.isHidden()) {
+                ft.show(fragment);
+
+            } else {
+                ft.hide(fragment);
+
+            }
+            ft.commit();
+
+
+    }
 
     @Override
     public void someEvent(String s) {
 
         if ("displayCameraMessage".equals(s)) {
 
-            progressBar = ProgressDialog.show(this,"Camera Message", "Please Wait. Extracting Text");
+            CameraFragment.progressDialog = ProgressDialog.show(this,"Camera Message", "Please Wait. Extracting Text");
 
         }
 
         if ("dismissProgressBar".equals(s)) {
 
-            if (progressBar != null && progressBar.isShowing()) {
+            if (CameraFragment.progressDialog != null && CameraFragment.progressDialog.isShowing()) {
 
-                progressBar.dismiss();
+                CameraFragment.progressDialog.dismiss();
             }
         }
 
     }
 
-    protected void startCameraActivity() {
-        File file = new File(_path);
-        Uri outputFileUri = Uri.fromFile(file);
-
-        final Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
-
-        startActivityForResult(intent, 0);
-    }
-
-
-    private class  MyAdapter extends  PagerAdapter {
+     private class  MyAdapter extends  PagerAdapter {
 
         private LayoutInflater mInflater;
         private int[] mLayouts = {R.layout.microphone_layout, R.layout.camera_layout, R.layout.note_layout};
@@ -290,7 +487,10 @@ public class MainActivity extends  Activity implements CameraFragment.onMyEventL
         }
     }
 
-/*    class MyAdapter extends FragmentStatePagerAdapter {
+
+
+    /*
+    class MyAdapter extends FragmenStatePagerAdapter {
 
         public MyAdapter(FragmentManager fm) {
             super(fm);

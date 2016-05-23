@@ -1,8 +1,11 @@
 package edu.ucla.cs.sourcecodes;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.speech.RecognizerIntent;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,11 +14,15 @@ import android.view.ViewGroup;
 
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.Locale;
+
 
 public class MicrophoneFragment extends Fragment {
 
 
     View mContentView = null;
+
 
     private String TAG = "MicrophoneFragment.java";
     @Nullable
@@ -26,7 +33,8 @@ public class MicrophoneFragment extends Fragment {
 
         Toast.makeText(getActivity(), "Coming Soon",Toast.LENGTH_SHORT).show();
 
-      /*  Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+
+       Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
 
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
 
@@ -36,13 +44,20 @@ public class MicrophoneFragment extends Fragment {
         Log.d(TAG, "starting activity for result");
         getParentFragment().startActivityForResult(intent, 2);
 
-*/
+
+
+
         return  mContentView;
     }
 
-    /*
+
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void  onActivityResult(int requestCode, int resultCode, Intent data) {
+        Fragment uploadType = getChildFragmentManager().findFragmentById(R.id.camera_frag);
+
+        if (uploadType != null) {
+            uploadType.onActivityResult(requestCode, resultCode, data);
+        }
         super.onActivityResult(requestCode, resultCode, data);
 
         Log.d(TAG, "In activity result");
@@ -71,7 +86,7 @@ public class MicrophoneFragment extends Fragment {
         }
     }
 
-    */
+
 
 
 

@@ -18,7 +18,6 @@ package edu.ucla.cs.sourcecodes;
 
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -34,11 +33,12 @@ import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.util.Log;
+ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -51,15 +51,17 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import com.googlecode.tesseract.android.TessBaseAPI;
 
 
 
 
-public class CameraFragment extends Fragment  {
+ public class CameraFragment extends Fragment   {
 
     public static ProgressDialog progressDialog = null;
 
@@ -69,28 +71,37 @@ public class CameraFragment extends Fragment  {
     // http://code.google.com/p/tesseract-ocr/downloads/list
     public static final String lang = "eng";
 
-    private Preview mPreview;
+    public static Preview mPreview;
 
-    Camera mCamera;
-    int mNumberOfCameras;
-    int mCurrentCamera;  // Camera ID currently chosen
-    int mCameraCurrentlyLocked;  // Camera ID that's actually acquired
+    static Camera mCamera;
+    static int mNumberOfCameras;
+    static int mCurrentCamera;  // Camera ID currently chosen
+    static int mCameraCurrentlyLocked;  // Camera ID that's actually acquired
     public String recognizedText;
 
 //    public static final String DATA_PATH = Environment
   //          .getExternalStorageDirectory().toString() + "/MyCameraApp/";
     public static final String DATA_PATH = Environment.getExternalStorageDirectory().toString();
 
-
+    static Boolean showcamera = false;
 
     // The first rear facing camera
-    int mDefaultCameraId;
+    static int mDefaultCameraId;
     private static String TAG = "CameraFragment.java";
     View mContentView;
+    Activity activity;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if ((savedInstanceState != null)   && (savedInstanceState.getSerializable("camera") != null)) {
+           // mCamera = (Camera) savedInstanceState.getSerializable("camera");
+
+            Log.d(TAG, "mCamera not null in savedIntanceState");
+
+        }
+
 
         Log.d(TAG, "onCreate");
 
@@ -99,6 +110,10 @@ public class CameraFragment extends Fragment  {
          mPreview = new Preview(this.getActivity());
 
 
+        if (progressDialog != null && progressDialog.isShowing()) {
+
+            progressDialog.dismiss();
+        }
 
 
         // Find the total number of cameras available
@@ -162,8 +177,18 @@ public class CameraFragment extends Fragment  {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
+
         outState.putBoolean(PHOTO_TAKEN, Preview.safeToTakePicture);
+
+        outState.putSerializable("camera", (Serializable) mCamera);
+
+
     }
+
+
+
+
+
 
     public interface onMyEventListener {
         public void someEvent(String s);
@@ -188,7 +213,7 @@ public class CameraFragment extends Fragment  {
 
 
 
-            TextView tessStatus =  (TextView)getActivity().findViewById(R.id.tess_status);
+            TextView tessStatus =  (TextView)getActivity().findViewById(R.id.status);
 
 
 
@@ -330,14 +355,15 @@ public class CameraFragment extends Fragment  {
             tessStatus.setVisibility(View.GONE);
 
             someEventListener.someEvent("dismissProgressBar");
-            //pass
+
+
+             //pass
             Intent i = new Intent(getActivity().getBaseContext(), NoteActivity.class);
             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             i.setAction(Intent.ACTION_VIEW);
-            i.putExtra("cameraActivityString",recognizedText);
+            i.putExtra("cameraActivityString", recognizedText);
             Log.d(TAG, "starting Other Activity");
             getActivity().getBaseContext().startActivity(i);
-
 
 
             /*
@@ -409,6 +435,65 @@ public class CameraFragment extends Fragment  {
 
 
 
+        mPreview.setOnTouchListener(new View.OnTouchListener() {
+            public boolean onTouch(View v, MotionEvent event) {
+
+                if(mCamera == null) {
+
+                    //do nothing
+                } else {
+
+                    // Get the pointer ID
+                    Camera.Parameters params = mCamera.getParameters();
+                    int action = event.getAction();
+
+
+                    if (event.getPointerCount() > 1) {
+
+                    /*if (CameraFragment.progressDialog != null && CameraFragment.progressDialog.isShowing()) {
+                        CameraFragment.progressDialog.dismiss();
+                    }*/
+
+                        Log.d(TAG, "Touch Event");
+
+                        // handle multi-touch events
+                        if (action == MotionEvent.ACTION_POINTER_DOWN) {
+
+
+                            Preview.mDist = getFingerSpacing(event);
+                        } else if (action == MotionEvent.ACTION_MOVE && params.isZoomSupported()) {
+                            mCamera.cancelAutoFocus();
+                            handleZoom(event, params);
+                        }
+                    } else {
+                        // handle single touch events
+                        if (action == MotionEvent.ACTION_UP) {
+                            handleFocus(event, params);
+                        } else if (action == MotionEvent.ACTION_DOWN) {
+
+                            if (MainActivity.mSpeechRecognizer != null) {
+
+                                MainActivity.mSpeechRecognizer.cancel();
+                                getActivity().findViewById(R.id.status).setVisibility(View.GONE);
+
+
+                            }
+
+
+                        }
+                    }
+
+
+                }
+
+                return true;
+
+
+            }
+        });
+
+
+
 
         return mPreview;
     }
@@ -418,11 +503,16 @@ public class CameraFragment extends Fragment  {
     public void onResume() {
         super.onResume();
 
+
+
         // Use mCurrentCamera to select the camera desired to safely restore
         // the fragment after the camera has been changed
+        if (progressDialog != null && progressDialog.isShowing()) {
 
-        Log.d(TAG, "onResume()");
-        mCamera = Camera.open(mCurrentCamera);
+            progressDialog.dismiss();
+        }
+
+         mCamera = Camera.open(mCurrentCamera);
         mCameraCurrentlyLocked = mCurrentCamera;
         mPreview.setCamera(mCamera);
 
@@ -430,13 +520,16 @@ public class CameraFragment extends Fragment  {
 
     }
 
+
     @Override
     public void onPause() {
         super.onPause();
 
+        Log.d(TAG, "onPause");
         // Because the Camera object is a shared resource, it's very
         // important to release it when the activity is paused.
         if (mCamera != null) {
+
             mPreview.setCamera(null);
             mCamera.release();
             mCamera = null;
@@ -554,6 +647,94 @@ public class CameraFragment extends Fragment  {
         }
     }
 
+
+/*
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+
+        // Get the pointer ID
+        Camera.Parameters params = mCamera.getParameters();
+        int action = event.getAction();
+
+
+
+        if (event.getPointerCount() > 1) {
+
+            if (CameraFragment.progressDialog != null && CameraFragment.progressDialog.isShowing()) {
+                CameraFragment.progressDialog.dismiss();
+            }
+
+            Log.d(TAG, "Touch Event");
+            // handle multi-touch events
+            if (action == MotionEvent.ACTION_POINTER_DOWN) {
+
+
+                mDist = getFingerSpacing(event);
+            } else if (action == MotionEvent.ACTION_MOVE && params.isZoomSupported()) {
+                mCamera.cancelAutoFocus();
+                handleZoom(event, params);
+            }
+        } else {
+            // handle single touch events
+            if (action == MotionEvent.ACTION_UP) {
+                handleFocus(event, params);
+            }
+        }
+
+
+        return true;
+    }
+    */
+
+    private void handleZoom(MotionEvent event, Camera.Parameters params) {
+        int maxZoom = params.getMaxZoom();
+        int zoom = params.getZoom();
+        float newDist = getFingerSpacing(event);
+        if (newDist > Preview.mDist) {
+            //zoom in
+            if (zoom < maxZoom)
+                zoom++;
+        } else if (newDist < Preview.mDist) {
+            //zoom out
+            if (zoom > 0)
+                zoom--;
+        }
+        Preview.mDist = newDist;
+        params.setZoom(zoom);
+        mCamera.setParameters(params);
+    }
+
+    public void handleFocus(MotionEvent event, Camera.Parameters params) {
+        int pointerId = event.getPointerId(0);
+        int pointerIndex = event.findPointerIndex(pointerId);
+        // Get the pointer's current position
+        float x = event.getX(pointerIndex);
+        float y = event.getY(pointerIndex);
+
+        List<String> supportedFocusModes = params.getSupportedFocusModes();
+        if (supportedFocusModes != null && supportedFocusModes.contains(Camera.Parameters.FOCUS_MODE_AUTO)) {
+            mCamera.autoFocus(new Camera.AutoFocusCallback() {
+                @Override
+                public void onAutoFocus(boolean b, Camera camera) {
+                    // currently set to auto-focus on single touch
+                }
+            });
+        }
+    }
+
+    /** Determine the space between the first two fingers */
+    private float getFingerSpacing(MotionEvent event) {
+        // ...
+        float x = event.getX(0) - event.getX(1);
+        float y = event.getY(0) - event.getY(1);
+
+
+        //return FloatMath.sqrt(x * x + y * y);
+        return (float) Math.sqrt(x * x + y * y);
+
+
+
+    }
 
 
 }
