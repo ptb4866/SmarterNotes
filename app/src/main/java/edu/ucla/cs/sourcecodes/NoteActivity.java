@@ -1,16 +1,20 @@
 package edu.ucla.cs.sourcecodes;
 
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -19,6 +23,8 @@ import android.widget.Toast;
 //import com.androidbelieve.sourcecodes.R;
 
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,29 +41,22 @@ import edu.ucla.cs.utils.Tag;
 
 public class NoteActivity extends AppCompatActivity {
 
-
-
     private View mContentView = null;
 
     private static String TAG = "NoteActivity";
-    private List<Chip>    mTagList1 = new ArrayList<>();
+    private ArrayList<Chip> mTagList1 = new ArrayList<>();
 
-    private List<Chip> mTagList2;
-
-    private ChipView mTextChipDefault;
     private ChipView mTextChipAttrs;
-    private ChipView mTextChipLayout;
-    private ChipView mTextChipOverride;
+
+    private String file = "mydata2";
+
+    private SessionDataMap sessionData;
+    private ListView mDrawerList;
+    private ArrayList<ListViewItem> items;
+
+    //new array type??
 
 
-
-    ListView listView;
-    String[] values;
-
-    ArrayList<String> array = new ArrayList<>();;
-    List<String> tags = new ArrayList<>();
-    protected static int position = 0;
-    TagContainerLayout mTagContainerLayout = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,12 +65,7 @@ public class NoteActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-
         mContentView = this.findViewById(android.R.id.content).getRootView();
-
-        //listView = (ListView) mContentView.findViewById(R.id.list);
-
-
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
@@ -111,9 +105,7 @@ public class NoteActivity extends AppCompatActivity {
                                         new AsyncTaskParseXML(text, getBaseContext()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                                     } else {
                                         Toast.makeText(NoteActivity.this, "No Internet Connection ",  Toast.LENGTH_LONG).show();
-
                                     }
-
                                 }
                             })
                             .setNegativeButton("Delete", new DialogInterface.OnClickListener() {
@@ -126,29 +118,9 @@ public class NoteActivity extends AppCompatActivity {
                             })
                             .create();
                     dialog.show();
-
                 }
             });
-
-
-
-
-
-
-
         }
-
-
-
-
-
-
-
-
-
-
-
-
 
         final AlertDialog.Builder alert = new AlertDialog.Builder(this);
 
@@ -172,39 +144,9 @@ public class NoteActivity extends AppCompatActivity {
 
                     alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {
-                            //
 
                             String textValue = edittext.getText().toString();
-                            //tags.add(textValue);
 
-                  /*            if (tags.isEmpty()) {
-
-                                tags.add(textValue);
-
-                            } else {
-
-                                if (NoteActivityCustomTags.container != null) {
-
-                                    NoteActivityCustomTags.container.removeAllTags();
-
-                                    tags.add(textValue);
-
-
-                                }
-
-
-                            }
-
-
-                            NoteActivityCustomTags.setContext(getBaseContext());
-                            // After you set your own attributes for TagView, then set tag(s) or add tag(s)
-                            NoteActivityCustomTags.ROUND_CORNER
-                                    .render(NoteActivity.this)
-                                    .setMode(LayouMode.SINGLE_CHOICE)
-                                    .define(NoteActivity.this)
-                                    .setTags(tags);
-
-*/
                             mTagList1.add(new Tag(textValue)) ;
 
                              // Attrs ChipTextView
@@ -226,7 +168,6 @@ public class NoteActivity extends AppCompatActivity {
                                                         new AsyncTaskParseXML(text, getBaseContext()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                                                     } else {
                                                         Toast.makeText(NoteActivity.this, "No Internet Connection ",  Toast.LENGTH_LONG).show();
-
                                                     }
 
                                                  }
@@ -241,54 +182,10 @@ public class NoteActivity extends AppCompatActivity {
                                             })
                                             .create();
                                     dialog.show();
-
                               }
                             });
-
-
-
-
-
-
-
-                         /*   array.add(textValue);
-                            Log.d("MYTAG", textValue);
-                            if (array != null) {
-                                values = array.toArray(new String[array.size()]);
-                                ArrayAdapter<String> adapter  = new ArrayAdapter<String>(getApplicationContext(), R.layout.listview_layout, android.R.id.text1, values);
-                                listView.setAdapter(adapter);
-                                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-                                    @Override
-                                    public void onItemClick(AdapterView<?> parent, View view,
-                                                            int position, long id) {
-
-                                        // ListView Clicked item index
-                                        int itemPosition = position;
-
-                                        // ListView Clicked item value
-                                        String word = (String) listView.getItemAtPosition(position);
-                                        Log.d("MYTAGS", word);
-
-
-                                        new AsyncTaskParseXML(word, getBaseContext()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-
-                                       // Show Alert
-                                        //Toast.makeText(getActivity().getApplicationContext(),
-                                        //        "Position :" + itemPosition + "  ListItem : " + itemValue, Toast.LENGTH_LONG)
-                                        //        .show();
-
-
-
-                                    }
-
-                                });
-
-
-                            } */
                         }
                     });
-
                     alert.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {
                             // what ever you want to do with No option.
@@ -296,23 +193,11 @@ public class NoteActivity extends AppCompatActivity {
                             dialog.cancel();
                         }
                     });
-
                     alert.show();
-
-
-
                 }
             });
         }
-
-
-
-
-
-
-
     }
-
 
 
     private boolean isNetworkConnected() {
@@ -321,20 +206,138 @@ public class NoteActivity extends AppCompatActivity {
         return cm.getActiveNetworkInfo() != null;
     }
 
-    public boolean isInternetAvailable() {
-        try {
-            InetAddress ipAddr = InetAddress.getByName("google.com"); //You can replace it with your name
 
-            if (ipAddr.equals("")) {
-                return false;
-            } else {
-                return true;
+    @Override
+    protected void onPause()
+    {
+        super.onPause();
+        /*
+         * Use OnPause because it's guaranteed to always happen
+         * Basically, this save function always happen
+         * Possibility of memory leak?? Need to check for validity.
+         */
+
+        saveSession();
+
+        ContextWrapper contextWrapper = new ContextWrapper(getApplicationContext());
+        File directory = contextWrapper.getDir(file, Context.MODE_PRIVATE);
+        File myInternalFile = new File(directory , file);
+
+        String saveData = JsonUtil.toJson(sessionData);
+        if (saveData != null)
+            try{
+                FileOutputStream fout = new FileOutputStream(myInternalFile);
+                fout.write(saveData.getBytes());
+                fout.close();
             }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+    }
 
-        } catch (Exception e) {
-            return false;
+    private void addDrawerItems() {
+        //fill array with session name stored using session
+        items = new ArrayList<>();
+        items.add(new ListViewItem("Add Session", DrawerArrayAdapter.TYPE_ADD));
+
+        ArrayList<String> fileNames = sessionData.getsNames();
+
+        for (int i = 0; i < sessionData.getLength(); i++)
+        {
+            items.add(new ListViewItem(fileNames.get(i),DrawerArrayAdapter.TYPE_OBJECT));
         }
 
+        //Update drawer here with sessions found
+        mDrawerList = (ListView)findViewById(R.id.navList);
+        final DrawerArrayAdapter drawerArrayAdapter = new DrawerArrayAdapter(this, R.id.text, items);
+
+        mDrawerList.setAdapter(drawerArrayAdapter);
+
+        mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if (position != 0) {
+                    //save current array and stuff
+                    saveSession();
+
+                    //change current session name to the one clicked
+                    ListViewItem curListView = (ListViewItem) drawerArrayAdapter.getItem(position);
+
+                    sessionData.setCurSessionName(curListView.getText());
+                    getSupportActionBar().setTitle(curListView.getText());
+
+                    SessionData curData = sessionData.getSession(curListView.getText());
+
+                    //switch array to new one
+                    clearArray();
+                    for (String word : curData.getWordList()) {
+                        mTagList1.add(new Tag(word));
+                    }
+
+                    //close the drawer
+                    DrawerLayout mDrawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
+                    mDrawerLayout.closeDrawers();
+                }
+            }
+        });
     }
+
+    public void addNewSession(String sessionName)
+    {
+        sessionData.setSession(sessionName, new SessionData());
+        DrawerArrayAdapter drawerArrayAdapter = (DrawerArrayAdapter)mDrawerList.getAdapter();
+        drawerArrayAdapter.add(new ListViewItem(sessionName, DrawerArrayAdapter.TYPE_OBJECT));
+        drawerArrayAdapter.notifyDataSetChanged();
+
+    }
+
+    public void saveSession()
+    {
+        SessionData temp = new SessionData();
+        temp.setSessionName(sessionData.getCurSessionName());
+
+        ArrayList<String> wordArray = new ArrayList<>();
+
+        for (Chip c :mTagList1)
+        {
+            wordArray.add(c.getText());
+        }
+
+        temp.setWordList(wordArray);
+        sessionData.setSession(temp.getSessionName(),temp);
+
+    }
+
+    public void clearArray()
+    {
+        //clear the current array and reflect it in the adapter
+        mTagList1.clear();
+    }
+
+    public void changeCurSessionName(String t)
+    {
+        //change current session
+        sessionData.setCurSessionName(t);
+        //update to reflect title
+        getSupportActionBar().setTitle(t);
+
+    }
+
+    public String getCurName()
+    {
+        return sessionData.getCurSessionName();
+    }
+
+    public void removeSession(String sName)
+    {
+        sessionData.removeSession(sName);
+    }
+
+    public boolean sessionExist(String name)
+    {
+        ArrayList<String> names = sessionData.getsNames();
+        return names.contains(name);
+    }
+
 
  }
