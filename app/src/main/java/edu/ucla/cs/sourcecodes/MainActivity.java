@@ -89,8 +89,6 @@ public class MainActivity extends  Activity implements CameraFragment.onMyEventL
         SpeechRecognitionListener listener = new SpeechRecognitionListener();
         mSpeechRecognizer.setRecognitionListener(listener);
 
-
-
         /**
          *Set an Apater for the View Pager
          */
@@ -130,46 +128,30 @@ public class MainActivity extends  Activity implements CameraFragment.onMyEventL
                                     if (!mIslistening) {
                                         mSpeechRecognizer.startListening(mSpeechRecognizerIntent);
                                     }
-
                                 }
-
                                 if (CameraFragment.progressDialog != null) {
-
                                     if (!CameraFragment.progressDialog.isShowing()) {
                                         if (!mIslistening) {
                                             mSpeechRecognizer.startListening(mSpeechRecognizerIntent);
                                         }
-
                                     }
                                 }
-
-
-
-
                                 break;
                             case 1:
-
-
                                 if (mSpeechRecognizer != null) {
-
                                     mSpeechRecognizer.cancel();
                                     findViewById(R.id.status).setVisibility(View.GONE);
-
                                 }
                                 if (CameraFragment.progressDialog == null) {
 
                                     final CameraFragment fragment = (CameraFragment) getFragmentManager().findFragmentById(R.id.camera_frag);
                                     fragment.onInitiateCapture();
-
                                 }
-
                                 if (CameraFragment.progressDialog != null) {
 
                                     if (!CameraFragment.progressDialog.isShowing()) {
                                         final CameraFragment fragment = (CameraFragment) getFragmentManager().findFragmentById(R.id.camera_frag);
                                         fragment.onInitiateCapture();
-
-
                                     }
 
                                 }

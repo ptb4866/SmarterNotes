@@ -9,9 +9,11 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -23,8 +25,12 @@ import android.widget.Toast;
 //import com.androidbelieve.sourcecodes.R;
 
 
+import java.io.BufferedReader;
+import java.io.DataInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
@@ -197,6 +203,90 @@ public class NoteActivity extends AppCompatActivity {
                 }
             });
         }
+
+        // Load data from json?
+        ContextWrapper contextWrapper = new ContextWrapper(getApplicationContext());
+        File directory = contextWrapper.getDir(file, Context.MODE_PRIVATE);
+        File myInternalFile = new File(directory , file);
+
+        sessionData = new SessionDataMap();
+
+        if (myInternalFile.exists()) {
+            try {
+                String formArray = "";
+                FileInputStream fis = new FileInputStream(myInternalFile);
+                DataInputStream in = new DataInputStream(fis);
+                BufferedReader br = new BufferedReader(new InputStreamReader(in));
+                String strLine;
+                while ((strLine = br.readLine()) != null) {
+                    formArray = formArray + strLine;
+                }
+                in.close();
+                sessionData = JsonUtil.toSdata(formArray);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        // try and get current session from mapping
+        if (!sessionData.getCurSessionName().equals("")) {
+            for (String word : sessionData.getSession(sessionData.getCurSessionName()).getWordList()) {
+                mTagList1.add(new Tag(word));
+            }
+        }
+        else
+        {
+            //Assume that we didn't load anything from SessionDatasessionData.setCurSessionName("Temp");
+            sessionData.setSession("Temp",new SessionData());
+        }
+        getSupportActionBar().setTitle(sessionData.getCurSessionName());
+
+        //set adapter for loaded words
+        mTextChipAttrs = (ChipView) findViewById(R.id.text_chip_attrs);
+        mTextChipAttrs.setChipList(mTagList1);
+        mTextChipAttrs.setOnChipClickListener(new OnChipClickListener() {
+            @Override
+            public void onChipClick(final Chip chip) {
+                final String text = chip.getText();
+
+                AlertDialog dialog = new AlertDialog.Builder(NoteActivity.this)
+                        .setTitle(" ")
+                        .setMessage("Select Option!")
+                        .setPositiveButton("Define", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                                if (isNetworkConnected()) {
+                                    new AsyncTaskParseXML(text, getBaseContext()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                                } else {
+                                    Toast.makeText(NoteActivity.this, "No Internet Connection ",  Toast.LENGTH_LONG).show();
+                                }
+                            }
+                        })
+                        .setNegativeButton("Delete", new DialogInterface.OnClickListener() {
+
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                mTextChipAttrs.remove(chip);
+                                dialog.dismiss();
+                            }
+                        })
+                        .create();
+                dialog.show();
+            }
+        });
+
+        //add action buttom for drawer on this
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawerLayout);
+
+        //create a new toggle to switch focus if the menu is slide open or closed
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.setDrawerListener(toggle);
+        //listView.setItemsCanFocus(true);
+
+        toggle.syncState();
+        addDrawerItems();
     }
 
 
@@ -273,6 +363,7 @@ public class NoteActivity extends AppCompatActivity {
                     for (String word : curData.getWordList()) {
                         mTagList1.add(new Tag(word));
                     }
+                    mTextChipAttrs.setChipList(mTagList1);
 
                     //close the drawer
                     DrawerLayout mDrawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
@@ -311,7 +402,12 @@ public class NoteActivity extends AppCompatActivity {
     public void clearArray()
     {
         //clear the current array and reflect it in the adapter
-        mTagList1.clear();
+        //Currently just setting a new list, cuz current one breaks it
+        mTagList1 = new ArrayList<>();
+        mTextChipAttrs.setChipList(mTagList1);
+
+        //TODO: Find out why this breaks the code
+        //mTagList1.clear();
     }
 
     public void changeCurSessionName(String t)

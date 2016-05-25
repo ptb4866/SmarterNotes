@@ -88,18 +88,20 @@ public class DrawerArrayAdapter extends ArrayAdapter {
                                 String textValue = edittext.getText().toString();
                                 if (!MA.sessionExist(textValue))
                                 {
-                                    MA.saveSession();
-                                    MA.addNewSession(textValue);
-                                    MA.clearArray();
-                                    MA.changeCurSessionName(textValue);
-                                    DrawerLayout mDrawerLayout = (DrawerLayout) MA.findViewById(R.id.drawerLayout);
-                                    mDrawerLayout.closeDrawers();
+                                        MA.saveSession();
+                                        MA.addNewSession(textValue);
+                                        MA.clearArray();
+                                        MA.changeCurSessionName(textValue);
+                                        DrawerLayout mDrawerLayout = (DrawerLayout) MA.findViewById(R.id.drawerLayout);
+                                        mDrawerLayout.closeDrawers();
+
                                 }
                                 else
                                 {
                                     //if value doesn't exist
                                     //try and open session? or give message?
                                 }
+
                             }
                         });
 

@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     android:layout_width="match_parent"
     android:id="@+id/drawerLayout"
+    android:fitsSystemWindows="true"
     tools:context="edu.ucla.cs.sourcecodes.NoteActivity">
 
     <include layout="@layout/content_textview_note"
