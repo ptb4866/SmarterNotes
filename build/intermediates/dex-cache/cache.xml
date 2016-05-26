@@ -19,7 +19,7 @@
         jar="/home/ptb4866/AndroidStudioProjects/SmarterNotes/app/build/intermediates/incremental-classes/debug/instant-run-bootstrap.jar"
         jumboMode="true"
         revision="23.0.3"
-        sha1="a6fe898c02b100786aceb74a172ced5d0c2d2f4a">
+        sha1="e0dd048a767f0e046fbedbb4902417c7251d53d8">
         <dex dex="/home/ptb4866/AndroidStudioProjects/SmarterNotes/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run-bootstrap_3e51cbbea1e9038e0f4f356a41d52f226888b4eb/classes.dex" />
     </item>
     <item
@@ -68,7 +68,7 @@
         jar="/home/ptb4866/AndroidStudioProjects/SmarterNotes/app/build/intermediates/incremental-runtime-classes/debug/instant-run.jar"
         jumboMode="true"
         revision="23.0.3"
-        sha1="00ad8a702f150a48043d4e180d4f8230d96b8f55">
+        sha1="e75211bd793a4d1e596f5d3c264b2ec97c08d668">
         <dex dex="/home/ptb4866/AndroidStudioProjects/SmarterNotes/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run_210e6e55d6f7253ecbd494bfd9cd61c60bb9160a/classes.dex" />
     </item>
     <item

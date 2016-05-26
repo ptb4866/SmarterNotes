@@ -73,59 +73,10 @@ public class NoteActivity extends AppCompatActivity {
 
         mContentView = this.findViewById(android.R.id.content).getRootView();
 
+
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
 
-            String words = extras.getString("cameraActivityString");
-
-            if (words != null) {
-
-                words = words.trim();
-                //split words with space and tab as the delimeter
-                String[] data = words.split("\\s+");
-
-                for (String word : data) {
-
-                    mTagList1.add(new Tag(word)) ;
-
-                }
-            }
-
-
-            // Attrs ChipTextView
-            mTextChipAttrs = (ChipView) findViewById(R.id.text_chip_attrs);
-            mTextChipAttrs.setChipList(mTagList1);
-            mTextChipAttrs.setOnChipClickListener(new OnChipClickListener() {
-                @Override
-                public void onChipClick(final Chip chip) {
-                    final String text = chip.getText();
-
-                    AlertDialog dialog = new AlertDialog.Builder(NoteActivity.this)
-                            .setTitle(" ")
-                            .setMessage("Select Option!")
-                            .setPositiveButton("Define", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-
-                                    if (isNetworkConnected()) {
-                                        new AsyncTaskParseXML(text, getBaseContext()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                                    } else {
-                                        Toast.makeText(NoteActivity.this, "No Internet Connection ",  Toast.LENGTH_LONG).show();
-                                    }
-                                }
-                            })
-                            .setNegativeButton("Delete", new DialogInterface.OnClickListener() {
-
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    mTextChipAttrs.remove(chip);
-                                    dialog.dismiss();
-                                }
-                            })
-                            .create();
-                    dialog.show();
-                }
-            });
         }
 
         final AlertDialog.Builder alert = new AlertDialog.Builder(this);
@@ -237,7 +188,7 @@ public class NoteActivity extends AppCompatActivity {
         else
         {
             //Assume that we didn't load anything from SessionDatasessionData.setCurSessionName("Temp");
-            sessionData.setSession("Temp",new SessionData());
+           // sessionData.setSession("Temp",new SessionData());
         }
         getSupportActionBar().setTitle(sessionData.getCurSessionName());
 
@@ -285,8 +236,90 @@ public class NoteActivity extends AppCompatActivity {
         drawer.setDrawerListener(toggle);
         //listView.setItemsCanFocus(true);
 
+
+
+
+
         toggle.syncState();
+
+
         addDrawerItems();
+
+        if (extras != null) {
+            String sessionTitle = extras.getString("sessionTitle");
+            if (sessionTitle != null) {
+                if (!sessionExist(sessionTitle)) {
+                    saveSession();
+                    addNewSession(sessionTitle);
+                    clearArray();
+                    changeCurSessionName(sessionTitle);
+                    //DrawerLayout mDrawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
+                    //mDrawerLayout.closeDrawers();
+
+
+
+                    String words = extras.getString("addToNote");
+
+                    if (words != null) {
+
+                        words = words.trim();
+                        //split words with space and tab as the delimeter
+                        String[] data = words.split("\\s+");
+
+                        for (String word : data) {
+
+                            mTagList1.add(new Tag(word)) ;
+
+                        }
+                    }
+
+
+                    // Attrs ChipTextView
+                    mTextChipAttrs = (ChipView) findViewById(R.id.text_chip_attrs);
+                    mTextChipAttrs.setChipList(mTagList1);
+                    mTextChipAttrs.setOnChipClickListener(new OnChipClickListener() {
+                        @Override
+                        public void onChipClick(final Chip chip) {
+                            final String text = chip.getText();
+
+                            AlertDialog dialog = new AlertDialog.Builder(NoteActivity.this)
+                                    .setTitle(" ")
+                                    .setMessage("Select Option!")
+                                    .setPositiveButton("Define", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+
+                                            if (isNetworkConnected()) {
+                                                new AsyncTaskParseXML(text, getBaseContext()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                                            } else {
+                                                Toast.makeText(NoteActivity.this, "No Internet Connection ",  Toast.LENGTH_LONG).show();
+                                            }
+                                        }
+                                    })
+                                    .setNegativeButton("Delete", new DialogInterface.OnClickListener() {
+
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            mTextChipAttrs.remove(chip);
+                                            dialog.dismiss();
+                                        }
+                                    })
+                                    .create();
+                            dialog.show();
+                        }
+                    });
+
+
+                } else {
+                    //if value doesn't exist
+                    //try and open session? or give message?
+                }
+
+            }
+        }
+
+
+
     }
 
 

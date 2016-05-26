@@ -356,14 +356,16 @@ import com.googlecode.tesseract.android.TessBaseAPI;
 
             someEventListener.someEvent("dismissProgressBar");
 
+            someEventListener.someEvent("recognizedText:" + recognizedText);
+
 
              //pass
-            Intent i = new Intent(getActivity().getBaseContext(), NoteActivity.class);
+            /*Intent i = new Intent(getActivity().getBaseContext(), NoteActivity.class);
             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             i.setAction(Intent.ACTION_VIEW);
             i.putExtra("cameraActivityString", recognizedText);
             Log.d(TAG, "starting Other Activity");
-            getActivity().getBaseContext().startActivity(i);
+            getActivity().getBaseContext().startActivity(i);*/
 
 
             /*

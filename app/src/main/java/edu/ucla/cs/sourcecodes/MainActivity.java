@@ -1,13 +1,16 @@
 package edu.ucla.cs.sourcecodes;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Fragment;
 
 import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 
+import android.graphics.Color;
 import android.os.Bundle;
 
 import android.speech.RecognitionListener;
@@ -25,7 +28,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -381,12 +386,13 @@ public class MainActivity extends  Activity implements CameraFragment.onMyEventL
 
             notifications.setText("You said " + str);
 
-            Intent i = new Intent( getApplicationContext(), NoteActivity.class);
-            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            i.setAction(Intent.ACTION_VIEW);
-            i.putExtra("cameraActivityString", str);
-            Log.d(TAG, "starting Other Activity");
-            startActivity(i);
+            //Intent i = new Intent( getApplicationContext(), NoteActivity.class);
+            //i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+           // i.setAction(Intent.ACTION_VIEW);
+           // i.putExtra("cameraActivityString", str);
+           // Log.d(TAG, "starting Other Activity");
+            //startActivity(i);
+            displayWordsInNoteActivity(str);
 
         }
 
@@ -395,6 +401,52 @@ public class MainActivity extends  Activity implements CameraFragment.onMyEventL
         {
         }
     }
+
+
+    void displayWordsInNoteActivity(String words) {
+
+
+        final EditText edittext = new EditText(getApplicationContext());
+        edittext.setTextColor(Color.BLACK);
+
+        final String finalStr = words;
+        AlertDialog dialog = new AlertDialog.Builder(MainActivity.this)
+                .setTitle("Add a new session ")
+                .setMessage("Enter A Name ")
+                .setView(edittext)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        String textValue = edittext.getText().toString();
+
+
+                        Intent i = new Intent( getApplicationContext(), NoteActivity.class);
+                        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        i.setAction(Intent.ACTION_VIEW);
+                        i.putExtra("addToNote", finalStr);
+                        i.putExtra("sessionTitle",textValue);
+                        Log.d(TAG, "starting Other Activity");
+                        startActivity(i);
+
+
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .create();
+        dialog.show();
+
+
+
+    }
+
+
 
 
     void addShowHideListener(final Fragment fragment) {
@@ -430,6 +482,23 @@ public class MainActivity extends  Activity implements CameraFragment.onMyEventL
                 CameraFragment.progressDialog.dismiss();
             }
         }
+
+
+        String str = s.substring(0,14) ;
+        Log.d(TAG, "substring:" + str);
+
+        if ("recognizedText".equals(str)) {
+
+            if (s.length() > 15) {
+                displayWordsInNoteActivity(s.substring(15, s.length()));
+                ;
+            } else {
+                Toast.makeText(MainActivity.this, "Text Couldn't Be Retrieved. Retry!!! ",  Toast.LENGTH_LONG).show();
+
+
+            }
+        }
+
 
     }
 
