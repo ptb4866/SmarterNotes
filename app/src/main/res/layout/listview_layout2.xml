@@ -3,16 +3,20 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" >
 
+    <ImageView
+        android:id="@+id/img"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/checkedbox"/>
 
     <TextView
-        android:id="@android:id/text1"
+        android:id="@+id/text1"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:minHeight="?android:attr/listPreferredItemHeight"
-        android:paddingLeft="6dip"
         android:textColor="@android:color/black"
-        android:paddingRight="10dip"
+        android:paddingBottom="10dip"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textSize="@dimen/font_size"/>
 
