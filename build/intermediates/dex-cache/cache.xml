@@ -6,91 +6,91 @@
         jumboMode="true"
         revision="23.0.3"
         sha1="1b8e03daaa43fb0a4cd57e378167c2fd70454c1e">
-        <dex dex="/home/ptb4866/AndroidStudioProjects/SmarterNotes/app/build/intermediates/pre-dexed/debug/com.android.support-appcompat-v7-23.3.0_f1597bb75790d1f593c53c41e27bcad587f24163.jar" />
+        <dex dex="/home/ptb4866/AndroidStudioProjects/SmarterNotes/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-appcompat-v7-23.3.0_f1597bb75790d1f593c53c41e27bcad587f24163/classes.dex" />
     </item>
     <item
         jar="/home/ptb4866/AndroidStudioProjects/SmarterNotes/app/build/intermediates/exploded-aar/com.hkm.taglib/tag/1.2.0/jars/classes.jar"
         jumboMode="true"
         revision="23.0.3"
         sha1="8adc7c4cefbdd9c364f945f1b691ba6874376ebb">
-        <dex dex="/home/ptb4866/AndroidStudioProjects/SmarterNotes/app/build/intermediates/pre-dexed/debug/com.hkm.taglib-tag-1.2.0_169e94146dad40d1a9c01d2e5a8613c56087206a.jar" />
+        <dex dex="/home/ptb4866/AndroidStudioProjects/SmarterNotes/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.hkm.taglib-tag-1.2.0_169e94146dad40d1a9c01d2e5a8613c56087206a/classes.dex" />
     </item>
     <item
         jar="/home/ptb4866/AndroidStudioProjects/SmarterNotes/app/build/intermediates/incremental-classes/debug/instant-run-bootstrap.jar"
         jumboMode="true"
         revision="23.0.3"
-        sha1="1c95ddb3c1b10a82f92c0266600ac05c9428e000">
-        <dex dex="/home/ptb4866/AndroidStudioProjects/SmarterNotes/app/build/intermediates/pre-dexed/debug/instant-run-bootstrap_3e51cbbea1e9038e0f4f356a41d52f226888b4eb.jar" />
+        sha1="3f0874769fa536e8dc8989831a877e422d55a8a3">
+        <dex dex="/home/ptb4866/AndroidStudioProjects/SmarterNotes/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run-bootstrap_3e51cbbea1e9038e0f4f356a41d52f226888b4eb/classes.dex" />
     </item>
     <item
         jar="/home/ptb4866/AndroidStudioProjects/SmarterNotes/app/build/intermediates/exploded-aar/com.android.support/design/23.3.0/jars/classes.jar"
         jumboMode="true"
         revision="23.0.3"
         sha1="f0001e71cea6ae432a00021c6f727f5ef0f3d27e">
-        <dex dex="/home/ptb4866/AndroidStudioProjects/SmarterNotes/app/build/intermediates/pre-dexed/debug/com.android.support-design-23.3.0_92f23df3723f2e81944a88e4f8770d856a5b6bea.jar" />
+        <dex dex="/home/ptb4866/AndroidStudioProjects/SmarterNotes/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-design-23.3.0_92f23df3723f2e81944a88e4f8770d856a5b6bea/classes.dex" />
     </item>
     <item
         jar="/home/ptb4866/AndroidStudioProjects/SmarterNotes/app/build/intermediates/exploded-aar/com.android.support/recyclerview-v7/23.3.0/jars/classes.jar"
         jumboMode="true"
         revision="23.0.3"
         sha1="debf30ce0a7560396b6235edef77e447006454c2">
-        <dex dex="/home/ptb4866/AndroidStudioProjects/SmarterNotes/app/build/intermediates/pre-dexed/debug/com.android.support-recyclerview-v7-23.3.0_cb7fa252bb667aca018e0a8ac7f12a023ae5d486.jar" />
+        <dex dex="/home/ptb4866/AndroidStudioProjects/SmarterNotes/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-recyclerview-v7-23.3.0_cb7fa252bb667aca018e0a8ac7f12a023ae5d486/classes.dex" />
     </item>
     <item
         jar="/home/ptb4866/Android/Sdk/extras/android/m2repository/com/android/support/support-annotations/23.3.0/support-annotations-23.3.0.jar"
         jumboMode="true"
         revision="23.0.3"
         sha1="db7791d75a07fef9844d06236c1c59ba7bf6997c">
-        <dex dex="/home/ptb4866/AndroidStudioProjects/SmarterNotes/app/build/intermediates/pre-dexed/debug/support-annotations-23.3.0_45364b1f4f270781531b0e6d427a34ab6597e598.jar" />
+        <dex dex="/home/ptb4866/AndroidStudioProjects/SmarterNotes/app/build/intermediates/transforms/dex/debug/folders/1000/10/support-annotations-23.3.0_45364b1f4f270781531b0e6d427a34ab6597e598/classes.dex" />
     </item>
     <item
         jar="/home/ptb4866/AndroidStudioProjects/SmarterNotes/app/build/intermediates/exploded-aar/com.android.support/support-vector-drawable/23.3.0/jars/classes.jar"
         jumboMode="true"
         revision="23.0.3"
         sha1="a0b5d60246cd9d4f3f2443611b3b4c25265840b5">
-        <dex dex="/home/ptb4866/AndroidStudioProjects/SmarterNotes/app/build/intermediates/pre-dexed/debug/com.android.support-support-vector-drawable-23.3.0_cfe3b6b0b878d3148a6a2854b1129aef747cca4a.jar" />
+        <dex dex="/home/ptb4866/AndroidStudioProjects/SmarterNotes/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-support-vector-drawable-23.3.0_cfe3b6b0b878d3148a6a2854b1129aef747cca4a/classes.dex" />
     </item>
     <item
         jar="/home/ptb4866/AndroidStudioProjects/SmarterNotes/app/build/intermediates/exploded-aar/com.android.support/support-v4/23.3.0/jars/classes.jar"
         jumboMode="true"
         revision="23.0.3"
         sha1="8a034dd16c0dfd75fe86c52c2cd581592acc684a">
-        <dex dex="/home/ptb4866/AndroidStudioProjects/SmarterNotes/app/build/intermediates/pre-dexed/debug/com.android.support-support-v4-23.3.0_34ed185795a34afe19c0435eabb272e003ad3102.jar" />
+        <dex dex="/home/ptb4866/AndroidStudioProjects/SmarterNotes/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-support-v4-23.3.0_34ed185795a34afe19c0435eabb272e003ad3102/classes.dex" />
     </item>
     <item
         jar="/home/ptb4866/AndroidStudioProjects/SmarterNotes/app/build/intermediates/exploded-aar/com.android.support/animated-vector-drawable/23.3.0/jars/classes.jar"
         jumboMode="true"
         revision="23.0.3"
         sha1="23be6993826b8fd88bbc8d14928bb3b8960d3d4e">
-        <dex dex="/home/ptb4866/AndroidStudioProjects/SmarterNotes/app/build/intermediates/pre-dexed/debug/com.android.support-animated-vector-drawable-23.3.0_b2aba13c9e00e07db681c78e57be69d100d621a4.jar" />
+        <dex dex="/home/ptb4866/AndroidStudioProjects/SmarterNotes/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-animated-vector-drawable-23.3.0_b2aba13c9e00e07db681c78e57be69d100d621a4/classes.dex" />
     </item>
     <item
         jar="/home/ptb4866/AndroidStudioProjects/SmarterNotes/app/build/intermediates/incremental-runtime-classes/debug/instant-run.jar"
         jumboMode="true"
         revision="23.0.3"
-        sha1="80f7012f919d1d87678fde09a8108dce677d0d29">
-        <dex dex="/home/ptb4866/AndroidStudioProjects/SmarterNotes/app/build/intermediates/pre-dexed/debug/instant-run_210e6e55d6f7253ecbd494bfd9cd61c60bb9160a.jar" />
+        sha1="b5808d0be00a16326abcdd2443eb59b8d91c6e66">
+        <dex dex="/home/ptb4866/AndroidStudioProjects/SmarterNotes/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run_210e6e55d6f7253ecbd494bfd9cd61c60bb9160a/classes.dex" />
     </item>
     <item
         jar="/home/ptb4866/AndroidStudioProjects/SmarterNotes/app/libs/json-simple-1.1.1.jar"
         jumboMode="true"
         revision="23.0.3"
         sha1="5d6f9b6a9ddca2a28c0216cc44efb2e20d9c23b5">
-        <dex dex="/home/ptb4866/AndroidStudioProjects/SmarterNotes/app/build/intermediates/pre-dexed/debug/json-simple-1.1.1_f1fd7a51ac21b2046c31cfc5902c65938e72f5ae.jar" />
+        <dex dex="/home/ptb4866/AndroidStudioProjects/SmarterNotes/app/build/intermediates/transforms/dex/debug/folders/1000/2/json-simple-1.1.1_f1fd7a51ac21b2046c31cfc5902c65938e72f5ae/classes.dex" />
     </item>
     <item
         jar="/home/ptb4866/AndroidStudioProjects/SmarterNotes/app/build/intermediates/exploded-aar/com.android.support/support-v4/23.3.0/jars/libs/internal_impl-23.3.0.jar"
         jumboMode="true"
         revision="23.0.3"
         sha1="4da5a4d697d32497c6f85567a5112e62fdfd0676">
-        <dex dex="/home/ptb4866/AndroidStudioProjects/SmarterNotes/app/build/intermediates/pre-dexed/debug/internal_impl-23.3.0_83f5b8848add10043c4745908de3a699a81027b9.jar" />
+        <dex dex="/home/ptb4866/AndroidStudioProjects/SmarterNotes/app/build/intermediates/transforms/dex/debug/folders/1000/10/internal_impl-23.3.0_83f5b8848add10043c4745908de3a699a81027b9/classes.dex" />
     </item>
     <item
         jar="/home/ptb4866/AndroidStudioProjects/SmarterNotes/app/libs/gson-2.2.4.jar"
         jumboMode="true"
         revision="23.0.3"
         sha1="a60a5e993c98c864010053cb901b7eab25306568">
-        <dex dex="/home/ptb4866/AndroidStudioProjects/SmarterNotes/app/build/intermediates/pre-dexed/debug/gson-2.2.4_836ed8bd7388693bbb4c6233023aae2d2e811822.jar" />
+        <dex dex="/home/ptb4866/AndroidStudioProjects/SmarterNotes/app/build/intermediates/transforms/dex/debug/folders/1000/2/gson-2.2.4_836ed8bd7388693bbb4c6233023aae2d2e811822/classes.dex" />
     </item>
 
 </items>

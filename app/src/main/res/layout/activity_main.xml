@@ -40,7 +40,7 @@
 
     <FrameLayout
         android:id="@+id/camera_frag"
-        android:layout_width="412dp"
+        android:layout_width="fill_parent"
         android:layout_height="fill_parent" >
 
     </FrameLayout>

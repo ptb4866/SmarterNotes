@@ -11,9 +11,11 @@ import android.content.res.Configuration;
 import android.hardware.Camera;
 import android.os.Build;
 import android.util.Log;
+import android.view.Display;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.WindowManager;
 
 public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback {
     private SurfaceHolder mHolder;
@@ -96,21 +98,22 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 
             parameters.setPreviewSize(mPreviewSize.width, mPreviewSize.height);
 
-
-            //mCamera.setDisplayOrientation(90);
+            //set orientation to landscape
+           // mCamera.setDisplayOrientation(0);
             if (Integer.parseInt(Build.VERSION.SDK) >= 8)
-                setDisplayOrientation(mCamera, 90);
+               // setDisplayOrientation(mCamera, 90);
+               mCamera.setDisplayOrientation(0);
             else
             {
                 if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT)
                 {
                     parameters.set("orientation", "portrait");
-                    parameters.set("rotation", 90);
+                    parameters.set("rotation", 0);
                 }
                 if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
                 {
                     parameters.set("orientation", "landscape");
-                    parameters.set("rotation", 90);
+                    parameters.set("rotation", 0);
                 }
             }
             mCamera.setParameters(parameters);
@@ -135,6 +138,43 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
     }
 
 
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        int width = resolveSize(getSuggestedMinimumWidth(), widthMeasureSpec);
+        int height = resolveSize(getSuggestedMinimumHeight(), heightMeasureSpec);
+
+        if (mSupportedPreviewSizes != null) {
+            mPreviewSize = getOptimalPreviewSize(mSupportedPreviewSizes, width, height);
+        }
+
+        float ratio;
+        if(mPreviewSize.width >= mPreviewSize.height)
+            ratio = (float) mPreviewSize.width / (float) mPreviewSize.height;
+        else
+            ratio = (float) mPreviewSize.height / (float) mPreviewSize.width;
+
+
+        float camWidth = (int) (height * ratio);
+        float newCamWidth;
+        float newWidthRatio;
+
+        if (camWidth < width) {
+            newWidthRatio = (float) width / (float) mPreviewSize.width;
+            newCamWidth = (newWidthRatio * camWidth);
+
+            setMeasuredDimension((int) (width * newWidthRatio), (int) newCamWidth);
+
+        } else {
+            newCamWidth = camWidth;
+            setMeasuredDimension(width, (int) newCamWidth);
+        }
+
+        // One of these methods should be used, second method squishes preview slightly
+       // setMeasuredDimension(width, (int) (width * ratio));
+
+    }
+
+    /*
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
@@ -172,6 +212,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         //setMeasuredDimension(width, (int) (width * ratio));
 
     }
+    */
 
     public Camera.Size getOptimalPreviewSize(List<Camera.Size> sizes, int w, int h) {
         final double ASPECT_TOLERANCE = 0.1;

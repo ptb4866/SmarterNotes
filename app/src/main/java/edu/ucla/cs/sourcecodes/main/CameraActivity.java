@@ -7,6 +7,7 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -326,54 +327,55 @@ public class CameraActivity extends  Activity{
             if (data != null) {
                 // get the returned data
                 Bundle extras = data.getExtras();
-                // get the cropped bitmap
-                selectedBitmap = extras.getParcelable("data");
 
-                if (_path  != null) {
-                    selectedBitmap = setPictureRotation(_path);
-                    mImageView.setImageBitmap(selectedBitmap);
-                }
+                if (extras != null) {
+                    // get the cropped bitmap
+                    selectedBitmap = extras.getParcelable("data");
 
-                AlertDialog dialog = new AlertDialog.Builder(CameraActivity.this)
-                        .setMessage("Continue Extracting Text? ")
-                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
+                    if (_path != null) {
+                        selectedBitmap = setPictureRotation(_path);
+                        mImageView.setImageBitmap(selectedBitmap);
+                    }
+
+                    AlertDialog dialog = new AlertDialog.Builder(CameraActivity.this)
+                            .setMessage("Continue Extracting Text? ")
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
 
 
-                                if (selectedBitmap != null) {
+                                    if (selectedBitmap != null) {
 
-                                    final Bitmap finalSelectedBitmap = selectedBitmap;
-                                    CameraActivity.this.runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
+                                        final Bitmap finalSelectedBitmap = selectedBitmap;
+                                        CameraActivity.this.runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
 
-                                            String recognizedText = tess(finalSelectedBitmap);
-                                            displayWordsInNoteActivity(recognizedText);
+                                                String recognizedText = tess(finalSelectedBitmap);
+                                                displayWordsInNoteActivity(recognizedText);
 
-                                        }
-                                    });
+                                            }
+                                        });
+                                    }
+
+                                    dialog.dismiss();
+
+
                                 }
+                            })
+                            .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
 
-                                dialog.dismiss();
-
-
-                            }
-                        })
-                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
 
 
+                                    dialog.dismiss();
+                                }
+                            })
+                            .create();
+                    dialog.show();
 
-                                dialog.dismiss();
-                            }
-                        })
-                        .create();
-                dialog.show();
-
-
+                }
 
 
             }
@@ -445,7 +447,7 @@ public class CameraActivity extends  Activity{
         baseApi.init(DATA_PATH, lang);
 
         Log.v(TAG, "after  init");
-        baseApi.setImage(bitmap);
+        baseApi.setImage(mBitmap);
         Log.v(TAG, "setImage");
         recognizedText = baseApi.getUTF8Text();
 
@@ -585,6 +587,12 @@ public class CameraActivity extends  Activity{
     public void onResume() {
         super.onResume();
 
+        if (!checkCameraHardware(this)) {
+            Intent i = new Intent(this, NoCamera.class);
+            startActivity(i);
+            finish();
+        }
+
         resetCameraView();
 
         createCamera();
@@ -592,7 +600,16 @@ public class CameraActivity extends  Activity{
 
 
     }
-
+    /** Check if this device has a camera */
+    private boolean checkCameraHardware(Context context) {
+        if (context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
+            // this device has a camera
+            return true;
+        } else {
+            // no camera on this device
+            return false;
+        }
+    }
 
     @Override
     public void onPause() {

@@ -50,4 +50,7 @@
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="questionmark">\?!</string>
+    <string name="explenation">Sorry, but i could not find a camera on your device.</string>
 </resources>
